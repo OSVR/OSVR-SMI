@@ -7,7 +7,7 @@ This is a plugin for OSVR that provides access the eye tracker data for SMI Eye 
 
 It is Windows-only, and requires the SMI SDK to build. See <http://www.smivision.com/en/gaze-and-eye-tracking-systems/support/software-download.html> for details.
 
-You will need to install the SMI [SDK](Eye Tracking HMD Upgrade Software) software on your computer before using this plugin. Additionally you will need to download Oculus Runtime and SDK available at <https://developer.oculus.com/downloads/>
+You will need to install the SMI [SDK](Eye Tracking HMD Upgrade Software) software on your computer before using this plugin. Additionally you might need to download Oculus Runtime and SDK if you will be using `Eye Tracking HMD Upgrade Package for the Oculus Rift DK2` available at <https://developer.oculus.com/downloads/>
 
 Then, just put the `.dll` file from this plugin in the same directory of your OSVR server as the other plugins - usually something like `osvr-plugins-0` - and use the config file provided here as an example.
 
