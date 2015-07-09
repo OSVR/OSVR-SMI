@@ -27,6 +27,7 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 # Build and install the plugin
 osvr_add_plugin(com_osvr_SMI_EyeTracker
     com_osvr_SMI_EyeTracker.cpp
+    SMITrackerDevice.h
     "${CMAKE_CURRENT_BINARY_DIR}/com_osvr_SMI_EyeTracker_json.h")
 
 # Link against PluginKit
