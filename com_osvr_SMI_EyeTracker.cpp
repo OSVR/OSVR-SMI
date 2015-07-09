@@ -37,7 +37,11 @@ myCallback(smi_CallbackDataStruct *result /*, void* userData  */) {
 
     smi_SampleHMDStruct *m_eyeData = (smi_SampleHMDStruct *)result->result;
 
-    SMITrackerDevice::getInstance()->reportData(m_eyeData);
+    if (SMITrackerDevice::getInstance() == nullptr) {
+        // skip this report, occurs once when mycallback is registered
+    } else {
+        SMITrackerDevice::getInstance()->reportData(m_eyeData);
+    }
 }
 
 /// helper function for SMI API calls
@@ -59,6 +63,7 @@ SMITrackerDevice *SMITrackerDevice::getInstance() { return m_instance; }
 // default update callback, in this case, it shouldn't do anything
 OSVR_ReturnCode SMITrackerDevice::update() { return OSVR_RETURN_SUCCESS; }
 
+/// Report data from this function
 void SMITrackerDevice::reportData(smi_SampleHMDStruct *m_eyeData) {
 
     OSVR_TimeValue times;
@@ -103,6 +108,7 @@ void SMITrackerDevice::reportData(smi_SampleHMDStruct *m_eyeData) {
 }
 
 SMITrackerDevice::SMITrackerDevice(OSVR_PluginRegContext ctx) {
+
     /// Create the initialization options
     OSVR_DeviceInitOptions opts = osvrDeviceCreateInitOptions(ctx);
 
@@ -120,8 +126,7 @@ SMITrackerDevice::SMITrackerDevice(OSVR_PluginRegContext ctx) {
     int rc;
 
     /// @todo re-use existing callback or create a new one, but you will
-    /// need
-    /// access to class members
+    /// need access to class members
     apiCallRC(rc = smi_setCallback(myCallback));
 
     smi_TrackingParameterStruct params;
