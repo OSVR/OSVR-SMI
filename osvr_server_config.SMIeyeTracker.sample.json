@@ -7,7 +7,7 @@
             "destination": "/me/eyes/left",
             "source": {
                 "child": {
-                    "tracker": "/com_osvr_SMI/SMI",
+                    "tracker": "/com_osvr_SMI_EyeTracker/SMI",
                     "sensor": 0
                 }
             }
@@ -16,7 +16,7 @@
             "destination": "/me/eyes/right",
             "source": {
                 "child": {
-                    "tracker": "/com_osvr_SMI/SMI",
+                    "tracker": "/com_osvr_SMI_EyeTracker/SMI",
                     "sensor": 1
                 }
             }
