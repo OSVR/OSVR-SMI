@@ -10,15 +10,15 @@
             "location2D": true,
             "direction": true,
             "tracker": true,
-			"button": true
+            "button": true
         }
     },
     "semantic": {
         "left": "eyetracker/0",
-		"right": "eyetracker/1"
+        "right": "eyetracker/1"
     },
     "automaticAliases": {
         "/me/eyes/left": "semantic/left",
-		"/me/eyes/right": "semantic/right"
+        "/me/eyes/right": "semantic/right"
     }
 }

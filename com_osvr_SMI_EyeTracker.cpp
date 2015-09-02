@@ -19,10 +19,11 @@ Sensics, Inc.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <stdint.h>
-
 // Internal Includes
 #include <SMITrackerDevice.h>
+
+// Standard Includes
+#include <stdint.h>
 
 // Anonymous namespace to avoid symbol collision
 namespace {
@@ -30,12 +31,7 @@ namespace {
 OSVR_MessageType eyeTrackerMessage;
 SMITrackerDevice *SMITrackerDevice::m_instance;
 
-static void CALLBACK
-myCallback(smi_CallbackDataStruct *result) { // /*, void* userData  */
-
-    /** We need a void* userData parameter to use here
-    auto self = static_cast<SMITrackerDevice*>(result->result);
-    */
+static void CALLBACK myCallback(smi_CallbackDataStruct *result) {
 
     smi_SampleHMDStruct *m_eyeData = (smi_SampleHMDStruct *)result->result;
 
@@ -48,7 +44,8 @@ myCallback(smi_CallbackDataStruct *result) { // /*, void* userData  */
 
 /// helper function for SMI API calls
 static void apiCallRC(int rc) {
-    std::cout << std::endl << smi_rcToString(rc) << std::endl;
+    std::cout << std::endl
+              << smi_rcToString(rc) << std::endl;
 }
 
 SMITrackerDevice *SMITrackerDevice::createInstance(OSVR_PluginRegContext ctx) {
@@ -74,9 +71,6 @@ void SMITrackerDevice::reportData(smi_SampleHMDStruct *m_eyeData) {
     por.data[0] = m_eyeData->por.x;
     por.data[1] = m_eyeData->por.y;
     osvrDeviceEyeTrackerReport2DGaze(m_eyetracker, por, 0, &times);
-
-    ///@todo, uncomment the following section to report other gaze data
-    /// such as 3D gaze direction (see EyeTrackerInterfaceC.h for description)
 
     OSVR_EyeGazeDirectionState left_dir;
     left_dir.data[0] = m_eyeData->left.gazeDirection.x;
@@ -125,15 +119,12 @@ SMITrackerDevice::SMITrackerDevice(OSVR_PluginRegContext ctx) {
 
     int rc;
 
-    /// @todo re-use existing callback or create a new one, but you will
-    /// need access to class members
     apiCallRC(rc = smi_setCallback(myCallback));
 
     smi_TrackingParameterStruct params;
     memset(&params, 0, sizeof(smi_TrackingParameterStruct));
     params.mappingDistance = 1500; // map to vergence distance
 
-    /// @todo this is simulating data for now
     bool simulateData = false;
 
     apiCallRC(rc = smi_startStreaming(simulateData, &params));
@@ -157,10 +148,6 @@ class HardwareDetection {
 
         std::cout << "PLUGIN: Got a hardware detection request" << std::endl;
 
-        /** @todo add proper hardware detection to make sure that device is
-        connected
-        If device is not detected, it should return OSVR_RETURN_FAILURE
-        */
         int rc;
         rc = smi_checkHardware();
         if (rc != 1) {
@@ -182,8 +169,6 @@ class HardwareDetection {
 } // namespace
 
 OSVR_PLUGIN(com_osvr_SMI_EyeTracker) {
-
-    /// don't modify this part
 
     osvrDeviceRegisterMessageType(ctx, "EyeTrackerMessage", &eyeTrackerMessage);
 
