@@ -64,49 +64,43 @@ set(SMI_ROOT_DIR
 
 if(WIN32)
     # Test 32/64 bits
-    if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
-        set(SMI_LIBRARY_PATH_SUFFIX "lib/x64")
-    else()
-        set(SMI_LIBRARY_PATH_SUFFIX "lib")
+    if("${CMAKE_SIZEOF_VOID_P}" EQUAL "4")
+        # Get desired program files directory
+        set(_PF86_ENV "ProgramFiles(x86)")
+        set(_PF86 $ENV{${_PF86_ENV}})
+        
+        if(NOT "$ENV{${_PF86}}" STREQUAL "")
+        # 32-bit dir: only set on win64
+            file(TO_CMAKE_PATH "$ENV{_PF86}" _progfiles)
+        else()
+        # 32-bit dir on win32
+            file(TO_CMAKE_PATH "$ENV{ProgramFiles}" _progfiles)
+        endif()
+
+        find_library(SMI_HMDAPI_LIBRARY
+            NAMES
+            iViewHMDAPI
+            PATHS
+            "${SMI_ROOT_DIR}"
+            "${_progfiles}/SMI/iViewNG-HMD/SDK/libs")
+
+        if(SMI_HMDAPI_LIBRARY)
+            get_filename_component(_libdir "${SMI_HMDAPI_LIBRARY}" DIRECTORY)
+        endif()
+
+        find_path(SMI_INCLUDE_DIR
+            NAMES
+            iViewHMDAPI.h
+            HINTS
+            "${_libdir}/../include"
+            "${_libdir}/../../include"
+            PATHS
+            "${SMI_ROOT_DIR}"
+            "${_progfiles}/SMI/iViewNG-HMD/SDK/include"
+            PATH_SUFFIXES
+            inc
+        )
     endif()
-
-    # Get desired program files directory
-    set(_PF86_ENV "ProgramFiles(x86)")
-    set(_PF86 $ENV{${_PF86_ENV}})
-    
-    if(NOT "$ENV{${_PF86}}" STREQUAL "")
-    # 32-bit dir: only set on win64
-        file(TO_CMAKE_PATH "$ENV{_PF86}" _progfiles)
-    else()
-    # 32-bit dir on win32
-        file(TO_CMAKE_PATH "$ENV{ProgramFiles}" _progfiles)
-    endif()
-
-    find_library(SMI_HMDAPI_LIBRARY
-        NAMES
-        iViewHMDAPI
-        PATHS
-        "${SMI_ROOT_DIR}"
-        "${_progfiles}/SMI/iViewNG-HMD/SDK/libs"
-        PATH_SUFFIXES
-        ${SMI_LIBRARY_PATH_SUFFIX})
-
-    if(SMI_HMDAPI_LIBRARY)
-        get_filename_component(_libdir "${SMI_HMDAPI_LIBRARY}" DIRECTORY)
-    endif()
-
-    find_path(SMI_INCLUDE_DIR
-        NAMES
-        iViewHMDAPI.h
-        HINTS
-        "${_libdir}/../include"
-        "${_libdir}/../../include"
-        PATHS
-        "${SMI_ROOT_DIR}"
-        "${_progfiles}/SMI/iViewNG-HMD/SDK/include"
-        PATH_SUFFIXES
-        inc
-    )
 endif() # WIN32
 
 include(FindPackageHandleStandardArgs)
